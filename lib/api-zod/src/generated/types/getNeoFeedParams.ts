@@ -6,6 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
-}
+export type GetNeoFeedParams = {
+/**
+ * Start date YYYY-MM-DD
+ */
+start_date: string;
+/**
+ * End date YYYY-MM-DD
+ */
+end_date: string;
+};

@@ -1,0 +1,77 @@
+Design a premium dark-mode web dashboard for an application called Asteroid Watch. The application monitors Near-Earth Objects (NEOs) using real-time NASA data. The design should feel like a professional planetary defense operations center, inspired by NASA mission control, ESA dashboards, and modern aerospace interfaces. Avoid a gaming aesthetic. Use a clean, minimalist layout with subtle neon blue and cyan accents, soft glows, glassmorphism panels, and a starfield background with faint orbital grid lines.
+
+Navigation
+
+Logo: Asteroid Watch
+Dashboard
+Today's Approaches
+Potentially Hazardous
+Statistics
+Search
+Settings
+
+Hero Section
+
+Large title: "Near-Earth Asteroid Monitoring"
+Live status indicator
+Current date and UTC time
+Brief description about monitoring asteroids approaching Earth
+CTA button: Explore Today's Asteroids
+
+Statistics Cards
+
+Asteroids Passing Today
+Potentially Hazardous Objects
+Closest Approach Distance
+Fastest Relative Velocity
+Largest Asteroid Today
+
+Featured Asteroid Panel
+Display:
+
+Asteroid name
+Estimated diameter
+Relative velocity
+Miss distance
+Closest approach time
+Orbiting body
+Hazard status with color-coded badge
+View Details button
+
+Interactive Visualization
+Large center panel containing a stylized Earth with orbital paths and approaching asteroid markers. Include zoom controls and an information overlay. The visualization should look scientific rather than cartoonish.
+
+Today's Approaches Table
+Columns:
+
+Name
+Approach Time
+Distance
+Velocity
+Diameter
+Hazard Status
+Details
+
+Charts Section
+
+Asteroid approaches over the last 30 days
+Hazardous vs Non-Hazardous distribution
+Size distribution
+Velocity distribution
+
+Search & Filters
+Search by asteroid name or NASA ID with filters for:
+
+Hazard status
+Diameter
+Relative velocity
+Date range
+
+Recent Alerts
+Vertical notification panel displaying recent close approaches with colored severity indicators.
+
+Footer
+Include a small disclaimer: "Data provided by NASA Near Earth Object Web Service (NeoWs)." Add GitHub and LinkedIn icons for the developer portfolio.
+
+Design Style
+Premium, elegant, scientific, trustworthy, and modern. Rounded cards (16-20px radius), spacious layout, subtle animations, clean typography, responsive desktop-first design, inspired by Bloomberg Terminal, NASA mission dashboards, and Apple Human Interface Guidelines. Use dark navy, charcoal black, cyan, electric blue, and white. Avoid excessive glowing effects, clutter, or game-like visuals.

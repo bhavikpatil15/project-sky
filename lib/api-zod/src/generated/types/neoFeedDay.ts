@@ -5,7 +5,9 @@
  * Asteroid Watch API - NASA NEO monitoring
  * OpenAPI spec version: 0.1.0
  */
+import type { Neo } from './neo';
 
-export interface HealthStatus {
-  status: string;
+export interface NeoFeedDay {
+  date: string;
+  asteroids: Neo[];
 }

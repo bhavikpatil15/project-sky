@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface NasaStats {
+  neo_count: number;
+  close_approach_count: number;
+  last_updated: string;
 }

@@ -3,13 +3,15 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Asteroid Watch API - NASA NEO monitoring
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: neo
+    description: Near Earth Object operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,142 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /neo/today:
+    get:
+      operationId: getTodayNeos
+      tags: [neo]
+      summary: Get today's NEO approaches
+      description: Returns all NEOs approaching Earth today
+      responses:
+        "200":
+          description: Today's NEO feed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NeoFeed"
+
+  /neo/feed:
+    get:
+      operationId: getNeoFeed
+      tags: [neo]
+      summary: Get NEO feed for a date range
+      description: Returns NEOs approaching Earth within a date range (max 7 days)
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Start date YYYY-MM-DD
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+          description: End date YYYY-MM-DD
+      responses:
+        "200":
+          description: NEO feed for date range
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NeoFeed"
+
+  /neo/stats:
+    get:
+      operationId: getNasaStats
+      tags: [neo]
+      summary: Get overall NASA NEO statistics
+      description: Returns cumulative NEO statistics from NASA
+      responses:
+        "200":
+          description: NASA NEO statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NasaStats"
+
+  /neo/today-stats:
+    get:
+      operationId: getTodayStats
+      tags: [neo]
+      summary: Get today's computed statistics
+      description: Returns computed stats for today's asteroid approaches
+      responses:
+        "200":
+          description: Today's computed stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodayStats"
+
+  /neo/history:
+    get:
+      operationId: getNeoHistory
+      tags: [neo]
+      summary: Get NEO history for the past 30 days
+      description: Returns aggregated NEO data for the last 30 days for charting
+      responses:
+        "200":
+          description: NEO history data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NeoHistoryDay"
+
+  /neo/search:
+    get:
+      operationId: searchNeos
+      tags: [neo]
+      summary: Search NEOs by name or NASA ID
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Asteroid name or NASA designation
+        - name: hazardous_only
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter to potentially hazardous only
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Neo"
+
+  /neo/{id}:
+    get:
+      operationId: getNeoById
+      tags: [neo]
+      summary: Get a specific NEO by NASA ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: NASA NEO ID
+      responses:
+        "200":
+          description: NEO detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Neo"
+        "404":
+          description: NEO not found
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +172,216 @@ components:
       required:
         - status
 
+    DiameterRange:
+      type: object
+      properties:
+        estimated_diameter_min:
+          type: number
+        estimated_diameter_max:
+          type: number
+      required:
+        - estimated_diameter_min
+        - estimated_diameter_max
+
+    EstimatedDiameter:
+      type: object
+      properties:
+        kilometers:
+          $ref: "#/components/schemas/DiameterRange"
+        meters:
+          $ref: "#/components/schemas/DiameterRange"
+        miles:
+          $ref: "#/components/schemas/DiameterRange"
+        feet:
+          $ref: "#/components/schemas/DiameterRange"
+      required:
+        - kilometers
+        - meters
+        - miles
+        - feet
+
+    RelativeVelocity:
+      type: object
+      properties:
+        kilometers_per_second:
+          type: string
+        kilometers_per_hour:
+          type: string
+        miles_per_hour:
+          type: string
+      required:
+        - kilometers_per_second
+        - kilometers_per_hour
+        - miles_per_hour
+
+    MissDistance:
+      type: object
+      properties:
+        astronomical:
+          type: string
+        lunar:
+          type: string
+        kilometers:
+          type: string
+        miles:
+          type: string
+      required:
+        - astronomical
+        - lunar
+        - kilometers
+        - miles
+
+    CloseApproachData:
+      type: object
+      properties:
+        close_approach_date:
+          type: string
+        close_approach_date_full:
+          type: string
+        epoch_date_close_approach:
+          type: number
+        relative_velocity:
+          $ref: "#/components/schemas/RelativeVelocity"
+        miss_distance:
+          $ref: "#/components/schemas/MissDistance"
+        orbiting_body:
+          type: string
+      required:
+        - close_approach_date
+        - close_approach_date_full
+        - epoch_date_close_approach
+        - relative_velocity
+        - miss_distance
+        - orbiting_body
+
+    Neo:
+      type: object
+      properties:
+        id:
+          type: string
+        neo_reference_id:
+          type: string
+        name:
+          type: string
+        name_limited:
+          type: string
+        designation:
+          type: string
+        nasa_jpl_url:
+          type: string
+        absolute_magnitude_h:
+          type: number
+        estimated_diameter:
+          $ref: "#/components/schemas/EstimatedDiameter"
+        is_potentially_hazardous_asteroid:
+          type: boolean
+        close_approach_data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CloseApproachData"
+        is_sentry_object:
+          type: boolean
+      required:
+        - id
+        - neo_reference_id
+        - name
+        - nasa_jpl_url
+        - absolute_magnitude_h
+        - estimated_diameter
+        - is_potentially_hazardous_asteroid
+        - close_approach_data
+        - is_sentry_object
+
+    NeoFeedDay:
+      type: object
+      properties:
+        date:
+          type: string
+        asteroids:
+          type: array
+          items:
+            $ref: "#/components/schemas/Neo"
+      required:
+        - date
+        - asteroids
+
+    NeoFeed:
+      type: object
+      properties:
+        element_count:
+          type: integer
+        start_date:
+          type: string
+        end_date:
+          type: string
+        near_earth_objects:
+          type: array
+          items:
+            $ref: "#/components/schemas/NeoFeedDay"
+      required:
+        - element_count
+        - start_date
+        - end_date
+        - near_earth_objects
+
+    TodayStats:
+      type: object
+      properties:
+        asteroid_count:
+          type: integer
+        hazardous_count:
+          type: integer
+        closest_approach_km:
+          type: ["number", "null"]
+        fastest_velocity_kms:
+          type: ["number", "null"]
+        largest_diameter_km:
+          type: ["number", "null"]
+        featured_asteroid:
+          oneOf:
+            - $ref: "#/components/schemas/Neo"
+            - type: "null"
+      required:
+        - asteroid_count
+        - hazardous_count
+        - closest_approach_km
+        - fastest_velocity_kms
+        - largest_diameter_km
+        - featured_asteroid
+
+    NasaStats:
+      type: object
+      properties:
+        neo_count:
+          type: integer
+        close_approach_count:
+          type: integer
+        last_updated:
+          type: string
+      required:
+        - neo_count
+        - close_approach_count
+        - last_updated
+
+    NeoHistoryDay:
+      type: object
+      properties:
+        date:
+          type: string
+        total_count:
+          type: integer
+        hazardous_count:
+          type: integer
+        avg_velocity_kms:
+          type: number
+        min_miss_distance_km:
+          type: number
+        max_diameter_km:
+          type: number
+      required:
+        - date
+        - total_count
+        - hazardous_count
+        - avg_velocity_kms
+        - min_miss_distance_km
+        - max_diameter_km

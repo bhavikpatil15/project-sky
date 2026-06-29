@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface RelativeVelocity {
+  kilometers_per_second: string;
+  kilometers_per_hour: string;
+  miles_per_hour: string;
 }
